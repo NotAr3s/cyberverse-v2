@@ -1,30 +1,81 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+
 
 export default function ProtectedRoute({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { user } = useAuth();
-  const router = useRouter();
 
-  useEffect(() => {
-    if (!user) {
-      router.replace("/login");
-    }
-  }, [user, router]);
+children
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center text-white">
-        Loading...
-      </div>
-    );
-  }
+}:{
 
-  return <>{children}</>;
+children:React.ReactNode;
+
+}){
+
+
+const router = useRouter();
+
+const [loading,setLoading] = useState(true);
+
+
+
+useEffect(()=>{
+
+
+async function checkAuth(){
+
+
+const res =
+await fetch("/api/auth/me");
+
+
+if(!res.ok){
+
+router.replace("/login");
+
+return;
+
+}
+
+
+setLoading(false);
+
+
+}
+
+
+checkAuth();
+
+
+},[router]);
+
+
+
+if(loading){
+
+return (
+
+<div className="
+min-h-screen
+bg-black
+text-white
+flex
+items-center
+justify-center
+">
+
+Checking security access...
+
+</div>
+
+);
+
+}
+
+
+
+return <>{children}</>;
+
 }

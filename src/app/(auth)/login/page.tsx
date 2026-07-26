@@ -1,177 +1,223 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-import {useState} from "react";
-import {useRouter} from "next/navigation";
 
-import {useAuth} from "@/context/AuthContext";
+export default function Login() {
 
+  const router = useRouter();
 
 
-export default function Login(){
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
 
+  const [error,setError] = useState("");
+  const [loading,setLoading] = useState(false);
 
-const router=useRouter();
 
 
-const {
-login
-}=useAuth();
+  async function submit(){
 
 
+    try {
 
-const [email,setEmail]=useState("");
+      setLoading(true);
+      setError("");
 
-const [password,setPassword]=useState("");
 
-const [error,setError]=useState("");
+      const res = await fetch("/api/login",{
 
+        method:"POST",
 
+        headers:{
+          "Content-Type":"application/json"
+        },
 
+        body:JSON.stringify({
 
-function submit(){
+          email,
+          password
 
+        })
 
-const success =
-login(
-email,
-password
-);
+      });
 
 
 
-if(success){
+      const data = await res.json();
 
-router.push("/dashboard");
 
-}
 
-else{
+      if(!res.ok){
 
-setError(
-"Invalid login details"
-);
+        setError(
+          data.message || "Login failed"
+        );
 
-}
+        return;
 
+      }
 
-}
 
 
+      router.push("/dashboard");
 
-return (
 
-<div className="
-min-h-screen
-bg-black
-text-white
-flex
-items-center
-justify-center
-">
+    }
 
+    catch(error){
 
-<div className="
-bg-white/5
-border
-border-gray-800
-rounded-xl
-p-8
-w-96
-">
+      setError(
+        "Something went wrong"
+      );
 
+    }
 
-<h1 className="
-text-3xl
-font-bold
-">
+    finally{
 
-CyberVerse Login
+      setLoading(false);
 
-</h1>
+    }
 
 
+  }
 
-<input
 
-className="
-mt-5
-w-full
-bg-black
-border
-p-3
-rounded
-"
 
-placeholder="Email"
+  return (
 
-onChange={
-e=>setEmail(e.target.value)
-}
+    <div className="
+      min-h-screen
+      bg-black
+      text-white
+      flex
+      items-center
+      justify-center
+    ">
 
-/>
 
+      <div className="
+        bg-white/5
+        border
+        border-gray-800
+        rounded-xl
+        p-8
+        w-96
+      ">
 
-<input
 
-className="
-mt-3
-w-full
-bg-black
-border
-p-3
-rounded
-"
+        <h1 className="
+          text-3xl
+          font-bold
+        ">
 
-placeholder="Password"
+          CyberVerse Login
 
-type="password"
+        </h1>
 
-onChange={
-e=>setPassword(e.target.value)
-}
 
-/>
 
+        <input
 
+          className="
+            mt-5
+            w-full
+            bg-black
+            border
+            border-gray-700
+            p-3
+            rounded
+          "
 
-<button
+          placeholder="Email"
 
-onClick={submit}
+          value={email}
 
-className="
-mt-5
-w-full
-bg-blue-600
-p-3
-rounded
-font-bold
-"
+          onChange={
+            e=>setEmail(e.target.value)
+          }
 
->
+        />
 
-Login
 
-</button>
 
+        <input
 
+          className="
+            mt-3
+            w-full
+            bg-black
+            border
+            border-gray-700
+            p-3
+            rounded
+          "
 
-<p className="
-text-red-400
-mt-3
-">
+          placeholder="Password"
 
-{error}
+          type="password"
 
-</p>
+          value={password}
 
+          onChange={
+            e=>setPassword(e.target.value)
+          }
 
-</div>
+        />
 
 
-</div>
 
-);
+        <button
 
+          onClick={submit}
+
+          disabled={loading}
+
+          className="
+            mt-5
+            w-full
+            bg-blue-600
+            p-3
+            rounded
+            font-bold
+            disabled:opacity-50
+          "
+
+        >
+
+          {
+            loading
+            ?
+            "Logging in..."
+            :
+            "Login"
+          }
+
+        </button>
+
+
+
+        {
+          error &&
+
+          <p className="
+            text-red-400
+            mt-3
+          ">
+
+            {error}
+
+          </p>
+
+        }
+
+
+      </div>
+
+
+    </div>
+
+  );
 
 }
