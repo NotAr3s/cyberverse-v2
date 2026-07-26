@@ -12,7 +12,7 @@ export default function LabsPage() {
 
   const { theme } = useTheme();
 
-  const style = themes[theme];
+  const style = themes[theme as keyof typeof themes];
 
 
   return (

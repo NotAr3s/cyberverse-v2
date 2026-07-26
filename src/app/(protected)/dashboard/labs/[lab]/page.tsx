@@ -11,26 +11,29 @@ export default function LabPage({
 
 params
 
-}:{
+}: {
 
 params: Promise<{
   lab:string
 }>
 
-}){
+}) {
 
 
 const {lab:labId}=use(params);
 
 
+
 const {theme}=useTheme();
 
-const style=themes[theme];
+const style = themes[theme as keyof typeof themes];
+
 
 
 const {
   completeLab
 }=useProgress();
+
 
 
 
@@ -74,8 +77,6 @@ Lab Not Found
 
 
 
-
-
 return (
 
 <div className="
@@ -92,9 +93,11 @@ p-10
 <h1
 
 className={`
+
 text-4xl
 font-bold
 ${style.text}
+
 `}
 
 >
@@ -164,6 +167,8 @@ font-bold
 
 
 
+
+
 <div className="
 bg-white/5
 border
@@ -182,9 +187,11 @@ Reward
 
 
 <h2 className={`
+
 text-xl
 font-bold
 ${style.text}
+
 `}>
 
 {lab.xp} XP
@@ -192,6 +199,8 @@ ${style.text}
 </h2>
 
 </div>
+
+
 
 
 
@@ -259,6 +268,7 @@ About This Lab
 
 
 
+
 <p className="
 text-gray-400
 mt-3
@@ -272,11 +282,15 @@ After finishing, mark it completed to receive XP.
 
 
 
+
+
+
 <div className="
 flex
 gap-4
 mt-6
 ">
+
 
 
 <a
@@ -286,11 +300,13 @@ href={lab.url}
 target="_blank"
 
 className={`
+
 px-6
 py-3
 rounded-lg
 font-bold
 ${style.button}
+
 `}
 
 >
@@ -298,6 +314,8 @@ ${style.button}
 Launch Lab
 
 </a>
+
+
 
 
 
@@ -332,6 +350,7 @@ Mark Completed
 
 
 </div>
+
 
 
 

@@ -109,6 +109,10 @@ Challenge Not Found
 
 
 
+const currentLab = lab;
+
+
+
 
 
 function submit(){
@@ -119,7 +123,7 @@ answer
 .trim()
 .toLowerCase()
 .includes(
-lab.answer.toLowerCase()
+currentLab.answer.toLowerCase()
 )
 
 ){
@@ -135,8 +139,8 @@ setCompleted(true);
 
 
 completeChallenge(
-lab.title,
-lab.xp
+currentLab.title,
+currentLab.xp
 );
 
 
@@ -176,9 +180,10 @@ text-4xl
 font-bold
 ">
 
-{lab.title}
+{currentLab.title}
 
 </h1>
+
 
 
 
@@ -199,9 +204,10 @@ p-6
 text-gray-400
 ">
 
-{lab.description}
+{currentLab.description}
 
 </p>
+
 
 
 
@@ -224,7 +230,7 @@ Challenge
 mt-2
 ">
 
-{lab.question}
+{currentLab.question}
 
 </p>
 
@@ -235,8 +241,9 @@ mt-2
 
 
 
+
 {
-lab.type === "choice" ? (
+currentLab.type === "choice" ? (
 
 
 <div className="
@@ -245,8 +252,9 @@ space-y-3
 ">
 
 
+
 {
-lab.options?.map(option=>(
+currentLab.options?.map(option=>(
 
 
 <button
@@ -256,6 +264,7 @@ key={option}
 onClick={()=>setAnswer(option)}
 
 className={`
+
 w-full
 text-left
 border
@@ -286,6 +295,7 @@ answer===option
 }
 
 
+
 </div>
 
 
@@ -294,6 +304,7 @@ answer===option
 :
 
 (
+
 
 <input
 
@@ -321,6 +332,8 @@ onChange={
 )
 
 }
+
+
 
 
 
@@ -365,6 +378,7 @@ completed
 
 
 
+
 <button
 
 onClick={
@@ -390,6 +404,8 @@ rounded-lg
 
 
 
+
+
 {
 
 showHint &&
@@ -399,11 +415,13 @@ mt-5
 text-yellow-400
 ">
 
-💡 {lab.hint}
+💡 {currentLab.hint}
 
 </p>
 
 }
+
+
 
 
 
@@ -421,15 +439,21 @@ font-bold
 
 
 
+
+
+
 <div className="
 mt-5
 text-green-400
 ">
 
 Reward:
-{lab.xp} XP
+{currentLab.xp} XP
 
 </div>
+
+
+
 
 
 
@@ -440,18 +464,21 @@ text-gray-400
 ">
 
 Difficulty:
-{lab.difficulty}
+{currentLab.difficulty}
 
 </div>
 
 
 
+
+
+
 </div>
 
 
 </div>
-
 
 );
+
 
 }

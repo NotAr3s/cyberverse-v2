@@ -81,8 +81,7 @@ theme
 }=useTheme();
 
 
-const style = themes[theme];
-
+const style = themes[theme as keyof typeof themes];
 
 
 return (
@@ -163,7 +162,7 @@ active
 
 ?
 
-`${style.bg}
+`bg-black/40
 ${style.text}
 ${style.border}
 border`
