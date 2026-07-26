@@ -6,12 +6,14 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-black text-white">
+
       <Sidebar />
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 min-w-0">
         {children}
       </main>
+
     </div>
   );
 }

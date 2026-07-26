@@ -137,8 +137,7 @@ Open Dashboard
 
 <Link
 
-href="/labs"
-
+href="/dashboard/labs"
 className="
 rounded-xl
 border
