@@ -5,13 +5,18 @@ import Link from "next/link";
 import { useTheme } from "@/context/ThemeContext";
 import { themes } from "@/context/themeStyles";
 import { useProgress } from "@/context/ProgressContext";
+import { useAuth } from "@/context/AuthContext";
+
+import CyberCard from "@/components/ui/CyberCard";
+import CyberButton from "@/components/ui/CyberButton";
+import PageContainer from "@/components/ui/PageContainer";
+
 
 
 export default function Dashboard(){
 
 
 const { theme } = useTheme();
-
 
 const style =
 themes[theme as keyof typeof themes];
@@ -22,6 +27,11 @@ xp,
 completedLabs,
 completedChallenges
 }=useProgress();
+
+
+const {
+user
+}=useAuth();
 
 
 
@@ -42,37 +52,9 @@ xp < 3000
 
 
 
-const stats=[
-
-{
-title:"Security Level",
-value:level
-},
-
-{
-title:"XP Points",
-value:`${xp} XP`
-},
-
-{
-title:"Labs Completed",
-value:String(completedLabs.length)
-},
-
-{
-title:"Challenges Solved",
-value:String(completedChallenges.length)
-}
-
-];
-
-
-
-
-
 const progress =
 Math.min(
-(xp/5000)*100,
+(xp / 5000) * 100,
 100
 );
 
@@ -80,87 +62,80 @@ Math.min(
 
 
 
+
 return (
 
-<div className="
-min-h-screen
-bg-black
-text-white
-p-10
-">
+<PageContainer>
 
 
-<h1 className={`
+<div className="mb-10">
+
+
+<h1
+className="
 text-4xl
-font-bold
-${style.text}
-`}>
-CyberVerse Dashboard
+font-black
+md:text-5xl
+"
+>
+
+Welcome,
+<span className="text-cyan-400">
+{" "}
+{user?.username || "Cyber Recruit"}
+</span>
+
 </h1>
 
 
-<p className="
-text-gray-400
-mt-2
-">
-Track your cybersecurity learning journey.
+<p className="mt-3 text-slate-400">
+
+Your cybersecurity command center.
+
 </p>
 
 
+</div>
 
 
 
-<div className="
-grid
-md:grid-cols-4
-gap-6
-mt-8
-">
 
 
-{
-stats.map((item)=>(
+
+
+{/* STATS */}
 
 <div
-
-key={item.title}
-
 className="
-bg-white/5
-border
-border-gray-800
-rounded-2xl
-p-6
+grid
+gap-6
+md:grid-cols-4
 "
-
 >
 
-<p className="
-text-gray-400
-">
 
-{item.title}
-
-</p>
+<StatCard
+title="Security Level"
+value={level}
+/>
 
 
-<h2 className={`
-text-2xl
-font-bold
-mt-3
-${style.text}
-`}>
-
-{item.value}
-
-</h2>
+<StatCard
+title="Experience"
+value={`${xp} XP`}
+/>
 
 
-</div>
+<StatCard
+title="Labs Completed"
+value={String(completedLabs.length)}
+/>
 
-))
 
-}
+<StatCard
+title="Challenges"
+value={String(completedChallenges.length)}
+/>
 
 
 </div>
@@ -169,45 +144,66 @@ ${style.text}
 
 
 
-<div className="
+
+
+{/* PROGRESS */}
+
+
+<CyberCard
+className="
 mt-8
-bg-white/5
-border
-border-gray-800
-rounded-2xl
-p-6
-">
+p-8
+"
+>
 
 
-<h2 className="
-text-2xl
-font-bold
-">
+<div className="flex justify-between">
+
+
+<h2 className="text-2xl font-bold">
 
 Security Progress
 
 </h2>
 
 
-<div className="
-mt-4
-w-full
-bg-gray-800
-rounded-full
+<span className="text-cyan-400">
+
+{Math.round(progress)}%
+
+</span>
+
+
+</div>
+
+
+
+
+<div
+className="
+mt-6
 h-4
-">
+rounded-full
+bg-black/40
+overflow-hidden
+"
+>
 
 
 <div
 
-className={`
-h-4
+className="
+h-full
 rounded-full
-${style.button}
-`}
+bg-gradient-to-r
+from-cyan-400
+to-violet-500
+"
 
 style={{
+
 width:`${progress}%`
+
 }}
 
 />
@@ -216,102 +212,80 @@ width:`${progress}%`
 </div>
 
 
-<p className="
-mt-3
-text-gray-400
-">
 
-{Math.round(progress)}% completed
+<p className="mt-4 text-slate-400">
+
+Keep completing missions to increase your security level.
 
 </p>
 
 
-</div>
+</CyberCard>
 
 
 
 
 
 
-<div className="
+
+{/* MISSIONS */}
+
+
+<h2
+className="
+mt-12
+mb-6
+text-3xl
+font-bold
+"
+>
+
+Active Missions
+
+</h2>
+
+
+
+<div
+className="
 grid
-md:grid-cols-3
 gap-6
-mt-8
-">
-
-
-<Link
-href="/dashboard/labs"
-className="
-bg-white/5
-border
-border-gray-800
-rounded-xl
-p-6
-hover:bg-white/10
+md:grid-cols-3
 "
 >
 
-<h2 className="text-xl font-bold">
-🧪 Cyber Labs
-</h2>
 
-<p className="text-gray-400 mt-2">
-Practice real cybersecurity skills.
-</p>
+<MissionCard
 
-</Link>
+title="🧪 Cyber Labs"
 
+text="Practice real vulnerabilities and security concepts."
 
+href="/labs"
 
-
-<Link
-href="/dashboard/challenges"
-className="
-bg-white/5
-border
-border-gray-800
-rounded-xl
-p-6
-hover:bg-white/10
-"
->
-
-<h2 className="text-xl font-bold">
-⚔ Challenges
-</h2>
-
-<p className="text-gray-400 mt-2">
-Solve security challenges and earn XP.
-</p>
-
-</Link>
+/>
 
 
+<MissionCard
+
+title="⚔ CTF Arena"
+
+text="Solve challenges and earn XP."
+
+href="/ctf"
+
+/>
 
 
-<Link
-href="/dashboard/ctf"
-className="
-bg-white/5
-border
-border-gray-800
-rounded-xl
-p-6
-hover:bg-white/10
-"
->
+<MissionCard
 
-<h2 className="text-xl font-bold">
-🏆 CTF Arena
-</h2>
+title="🏆 Leaderboard"
 
-<p className="text-gray-400 mt-2">
-Compete and improve your rank.
-</p>
+text="Track your global ranking."
 
-</Link>
+href="/leaderboard"
+
+/>
 
 
 </div>
@@ -319,7 +293,146 @@ Compete and improve your rank.
 
 
 
-</div>
+
+</PageContainer>
+
+);
+
+
+}
+
+
+
+
+
+
+
+function StatCard({
+
+title,
+value
+
+}:{
+
+title:string;
+value:string;
+
+}){
+
+
+return (
+
+<CyberCard
+className="
+p-6
+"
+>
+
+
+<p className="text-sm text-slate-400">
+
+{title}
+
+</p>
+
+
+<h2
+className="
+mt-3
+text-3xl
+font-black
+text-cyan-400
+"
+>
+
+{value}
+
+</h2>
+
+
+</CyberCard>
+
+);
+
+
+}
+
+
+
+
+
+
+
+
+function MissionCard({
+
+title,
+text,
+href
+
+}:{
+
+title:string;
+text:string;
+href:string;
+
+}){
+
+
+return (
+
+<CyberCard
+className="
+p-6
+"
+>
+
+
+<h3
+className="
+text-xl
+font-bold
+"
+>
+
+{title}
+
+</h3>
+
+
+<p
+className="
+mt-3
+text-slate-400
+"
+>
+
+{text}
+
+</p>
+
+
+
+<Link href={href}>
+
+
+<CyberButton
+className="
+mt-6
+w-full
+"
+>
+
+Open Mission
+
+</CyberButton>
+
+
+</Link>
+
+
+
+</CyberCard>
 
 );
 

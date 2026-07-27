@@ -1,336 +1,104 @@
-import Link from "next/link";
-import { Shield, Terminal, Trophy, Brain } from "lucide-react";
-
-
-const features = [
-  {
-    title: "Interactive Labs",
-    description: "Practice cybersecurity through hands-on exercises.",
-    icon: Shield,
-    href: "/labs",
-  },
-  {
-    title: "SOC Dashboard",
-    description: "Track your learning progress and achievements.",
-    icon: Terminal,
-    href: "/dashboard",
-  },
-  {
-    title: "CTF Arena",
-    description: "Solve challenges and earn XP.",
-    icon: Trophy,
-    href: "/ctf",
-  },
-  {
-    title: "AI Security",
-    description: "Explore AI-powered security tools.",
-    icon: Brain,
-    href: "/ai",
-  },
-];
+import Navbar from "@/components/landing/Navbar";
+import AnimatedBackground from "@/components/landing/AnimatedBackground";
+import MouseSpotlight from "@/components/landing/MouseSpotlight";
+import Hero from "@/components/landing/Hero";
+import FeatureCards from "@/components/landing/FeatureCards";
+import StatsSection from "@/components/landing/StatsSection";
+import ChallengePreview from "@/components/landing/ChallengePreview";
+import AISecuritySection from "@/components/landing/AISecuritySection";
+import CommunitySection from "@/components/landing/CommunitySection";
+import CTASection from "@/components/landing/CTASection";
+import Footer from "@/components/landing/Footer";
 
 
 export default function Home() {
 
+  return (
 
-return (
+    <main
+      className="
+      relative
+      isolate
+      min-h-screen
+      overflow-x-hidden
+      bg-[#030712]
+      "
+    >
 
-<main className="min-h-screen bg-slate-950 text-white">
 
+      {/* Background */}
 
-<section className="mx-auto max-w-7xl px-6 py-24">
+      <AnimatedBackground />
 
 
-<div className="text-center">
 
+      {/* Mouse Interaction */}
 
-<p className="
-mb-4
-inline-flex
-rounded-full
-border
-border-cyan-500/30
-bg-cyan-500/10
-px-4
-py-1
-text-sm
-text-cyan-300
-">
+      <MouseSpotlight />
 
-CyberVerse Platform
 
-</p>
 
+      {/* Main Content */}
 
+      <div className="relative z-10">
 
 
-<h1 className="
-text-6xl
-font-extrabold
-leading-tight
-">
+        <Navbar />
 
-Learn
 
-<span className="text-cyan-400">
 
- Cybersecurity 
+        {/* Hero */}
 
-</span>
+        <Hero />
 
-Through Practice
 
-</h1>
 
+        {/* Features */}
 
+        <FeatureCards />
 
 
-<p className="
-mx-auto
-mt-8
-max-w-3xl
-text-lg
-text-gray-400
-">
 
-Build practical cybersecurity skills through interactive labs,
-challenges, simulations, and AI-powered learning.
+        {/* Statistics */}
 
-</p>
+        <StatsSection />
 
 
 
+        {/* CTF */}
 
+        <ChallengePreview />
 
-<div className="
-mt-10
-flex
-flex-wrap
-justify-center
-gap-4
-">
 
 
-<Link
+        {/* AI Security */}
 
-href="/dashboard"
+        <AISecuritySection />
 
-className="
-rounded-xl
-bg-cyan-400
-px-8
-py-4
-font-semibold
-text-black
-transition
-hover:bg-cyan-300
-"
 
->
 
-Open Dashboard
+        {/* Community */}
 
-</Link>
+        <CommunitySection />
 
 
 
+        {/* CTA */}
 
-<Link
+        <CTASection />
 
-href="/dashboard/labs"
-className="
-rounded-xl
-border
-border-cyan-400
-px-8
-py-4
-transition
-hover:bg-cyan-400
-hover:text-black
-"
 
->
 
-Explore Labs
+        {/* Footer */}
 
-</Link>
+        <Footer />
 
 
+      </div>
 
-</div>
 
+    </main>
 
-
-
-
-{/* LOGIN REGISTER */}
-
-
-<div className="
-mt-6
-flex
-justify-center
-gap-4
-">
-
-
-<Link
-
-href="/login"
-
-className="
-rounded-xl
-border
-border-white/20
-px-8
-py-3
-transition
-hover:bg-white/10
-"
-
->
-
-Login
-
-</Link>
-
-
-
-
-<Link
-
-href="/register"
-
-className="
-rounded-xl
-bg-purple-600
-px-8
-py-3
-font-semibold
-transition
-hover:bg-purple-500
-"
-
->
-
-Create Account
-
-</Link>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-
-<div className="
-mt-20
-grid
-gap-6
-md:grid-cols-2
-lg:grid-cols-4
-">
-
-
-{
-
-features.map((feature)=>{
-
-
-const Icon = feature.icon;
-
-
-
-return (
-
-<Link
-
-key={feature.title}
-
-href={feature.href}
-
-className="
-rounded-2xl
-border
-border-white/10
-bg-white/5
-p-6
-transition
-hover:border-cyan-400
-hover:bg-white/10
-"
-
->
-
-
-<Icon
-
-className="
-mb-4
-h-10
-w-10
-text-cyan-400
-"
-
-/>
-
-
-
-<h2 className="
-text-xl
-font-bold
-">
-
-{feature.title}
-
-</h2>
-
-
-
-
-<p className="
-mt-3
-text-gray-400
-">
-
-{feature.description}
-
-</p>
-
-
-
-</Link>
-
-
-)
-
-
-})
-
-
-}
-
-
-</div>
-
-
-
-
-
-</section>
-
-
-</main>
-
-);
-
+  );
 
 }

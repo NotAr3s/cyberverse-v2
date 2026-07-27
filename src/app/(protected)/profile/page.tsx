@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
+
 import {
   Shield,
   Trophy,
@@ -12,20 +14,18 @@ import {
   Code,
   Network,
   Brain,
+  Crown,
+  Activity
 } from "lucide-react";
 
+
 import { useProgress } from "@/context/ProgressContext";
-import { useTheme } from "@/context/ThemeContext";
-import { themes } from "@/context/themeStyles";
 
 
-export default function Profile() {
 
 
-const {theme}=useTheme();
 
-const style =
-themes[theme as keyof typeof themes];
+export default function Profile(){
 
 
 const {
@@ -38,9 +38,12 @@ completedChallenges
 
 const [editing,setEditing]=useState(false);
 
+
 const [username,setUsername]=useState(
 "Cyber Warrior"
 );
+
+
 
 
 const level =
@@ -54,25 +57,6 @@ xp < 3000
 :
 "Cyber Expert";
 
-
-
-const [skills,setSkills]=useState([
-{
-name:"Web Security",
-value:85,
-icon:Code
-},
-{
-name:"Network Security",
-value:70,
-icon:Network
-},
-{
-name:"AI Security",
-value:60,
-icon:Brain
-}
-]);
 
 
 
@@ -91,41 +75,84 @@ xp > 3000
 
 
 
+
+const skills=[
+
+{
+name:"Web Security",
+value:85,
+icon:Code
+},
+
+{
+name:"Network Security",
+value:70,
+icon:Network
+},
+
+{
+name:"AI Security",
+value:60,
+icon:Brain
+}
+
+];
+
+
+
+
+
 return (
 
 <div className="
-min-h-screen
-bg-black
-text-white
-p-10
-">
+space-y-10
+"
+>
+
+
+
 
 
 {/* HEADER */}
 
-<div className="flex justify-between items-center">
+
+<div className="
+flex
+justify-between
+items-center
+"
+>
 
 
 <div>
 
-<h1 className={`
+
+<h1 className="
 text-4xl
-font-bold
-${style.text}
-`}>
+md:text-5xl
+font-black
+"
+>
+
 Security Profile
+
 </h1>
 
 
 <p className="
-text-gray-400
-mt-2
-">
-Manage your CyberVerse identity and achievements
+mt-3
+text-slate-400
+"
+>
+
+Your CyberVerse identity and security progression.
+
 </p>
 
 
 </div>
+
+
 
 
 
@@ -137,36 +164,51 @@ className="
 flex
 items-center
 gap-2
+rounded-xl
+border
+border-white/10
+bg-white/5
 px-5
 py-3
-rounded-xl
-bg-white/10
-border
-border-gray-700
-hover:bg-white/20
+hover:bg-white/10
 "
 
 >
 
 {
+
 editing
+
 ?
+
 <>
+
 <Check size={18}/>
+
 Save
+
 </>
+
 :
+
 <>
+
 <Edit3 size={18}/>
-Edit Profile
+
+Edit
+
 </>
+
 }
 
 
 </button>
 
 
+
 </div>
+
+
 
 
 
@@ -176,35 +218,54 @@ Edit Profile
 
 {/* PROFILE CARD */}
 
-<div className="
-mt-8
-bg-white/5
-border
-border-gray-800
+
+<motion.div
+
+initial={{
+opacity:0,
+y:20
+}}
+
+animate={{
+opacity:1,
+y:0
+}}
+
+className="
 rounded-3xl
+border
+border-white/10
+bg-white/5
 p-8
-max-w-5xl
-">
+backdrop-blur-xl
+"
+
+>
 
 
 <div className="
 flex
-gap-6
 items-center
-">
+gap-6
+"
+>
 
 
-<div className={`
-w-28
-h-28
-rounded-full
+<div className="
 flex
+h-28
+w-28
 items-center
 justify-center
+rounded-full
+bg-gradient-to-r
+from-cyan-400
+to-violet-500
 text-4xl
-font-bold
-${style.button}
-`}>
+font-black
+text-black
+"
+>
 
 CV
 
@@ -212,27 +273,29 @@ CV
 
 
 
+
+
 <div>
 
 
 {
+
 editing
+
 ?
 
 <input
 
 value={username}
 
-onChange={(e)=>
-setUsername(e.target.value)
-}
+onChange={(e)=>setUsername(e.target.value)}
 
 className="
-bg-black
-border
-border-gray-700
 rounded-lg
-p-2
+border
+border-white/10
+bg-black/40
+p-3
 text-2xl
 font-bold
 "
@@ -243,55 +306,70 @@ font-bold
 
 <h2 className="
 text-3xl
-font-bold
-">
+font-black
+"
+>
+
 {username}
+
 </h2>
 
 }
 
 
-<p className="text-gray-400 mt-2">
+
+<p className="
+mt-2
+text-slate-400
+"
+>
+
 Cybersecurity Researcher
+
 </p>
 
 
+
+
 <div className="
+mt-4
 flex
 gap-3
-mt-3
-">
+"
+>
+
 
 <span className="
-px-3
-py-1
 rounded-full
-bg-green-500/20
-text-green-400
+bg-green-400/10
+px-4
+py-1
 text-sm
-">
+text-green-400
+"
+>
 
 ● Online
 
 </span>
 
 
+
 <span className="
-px-3
-py-1
 rounded-full
-bg-blue-500/20
-text-blue-400
+bg-cyan-400/10
+px-4
+py-1
 text-sm
-">
+text-cyan-400
+"
+>
 
 {rank}
 
 </span>
 
 
-</div>
-
 
 </div>
 
@@ -299,7 +377,7 @@ text-sm
 </div>
 
 
-
+</div>
 
 
 
@@ -307,12 +385,14 @@ text-sm
 
 {/* STATS */}
 
+
 <div className="
-grid
-md:grid-cols-4
-gap-5
 mt-10
-">
+grid
+gap-5
+md:grid-cols-4
+"
+>
 
 
 <Stat
@@ -348,28 +428,44 @@ value={`${completedChallenges.length}`}
 
 
 
+</motion.div>
+
+
+
+
+
+
 
 
 
 {/* SKILLS */}
 
+
+<section>
+
+
 <h2 className="
-text-2xl
-font-bold
-mt-10
-">
+text-3xl
+font-black
+"
+>
+
 Security Skills
+
 </h2>
 
 
+
 <div className="
-mt-5
-space-y-5
-">
+mt-6
+space-y-6
+"
+>
 
 
 {
-skills.map((skill)=>{
+
+skills.map((skill,index)=>{
 
 
 const Icon=skill.icon;
@@ -377,46 +473,86 @@ const Icon=skill.icon;
 
 return (
 
-<div
+<motion.div
+
 key={skill.name}
+
+initial={{
+opacity:0,
+x:-20
+}}
+
+animate={{
+opacity:1,
+x:0
+}}
+
+transition={{
+delay:index*0.1
+}}
+
+>
+
+
+<div className="
+mb-2
+flex
+justify-between
+"
 >
 
 
 <div className="
 flex
-justify-between
-mb-2
-">
+items-center
+gap-2
+"
+>
 
-<div className="flex gap-2 items-center">
-
-<Icon size={18}/>
+<Icon
+size={18}
+className="text-cyan-400"
+/>
 
 {skill.name}
 
 </div>
 
 
-<span>
+
+<span className="
+text-cyan-400
+"
+>
+
 {skill.value}%
+
 </span>
+
 
 </div>
 
 
+
+
 <div className="
 h-3
-bg-gray-800
+overflow-hidden
 rounded-full
-">
+bg-white/10
+"
+>
+
 
 <div
 
-className={`
-h-3
+className="
+h-full
 rounded-full
-${style.button}
-`}
+bg-gradient-to-r
+from-cyan-400
+to-violet-500
+"
 
 style={{
 width:`${skill.value}%`
@@ -428,11 +564,14 @@ width:`${skill.value}%`
 </div>
 
 
-</div>
+</motion.div>
 
-)
+
+);
+
 
 })
+
 
 }
 
@@ -440,29 +579,43 @@ width:`${skill.value}%`
 </div>
 
 
+</section>
 
 
 
 
 
 
-{/* BADGES */}
+
+
+
+{/* ACHIEVEMENTS */}
+
+
+
+<section>
+
 
 <h2 className="
-text-2xl
-font-bold
-mt-10
-">
+text-3xl
+font-black
+"
+>
+
 Achievements
+
 </h2>
 
 
+
+
 <div className="
+mt-6
 grid
-md:grid-cols-3
 gap-5
-mt-5
-">
+md:grid-cols-3
+"
+>
 
 
 <Badge
@@ -478,7 +631,7 @@ name="Security Learner"
 
 
 <Badge
-icon={<Trophy/>}
+icon={<Crown/>}
 name="CTF Rookie"
 />
 
@@ -487,10 +640,93 @@ name="CTF Rookie"
 
 
 
+</section>
+
+
+
+
+
+
+
+
+
+</div>
+
+);
+
+}
+
+
+
+
+
+
+
+function Stat({
+
+icon,
+title,
+value
+
+}:{
+
+icon:React.ReactNode;
+
+title:string;
+
+value:string;
+
+}){
+
+
+return (
+
+<div className="
+rounded-2xl
+border
+border-white/10
+bg-white/5
+p-5
+"
+>
+
+
+<div className="
+text-cyan-400
+"
+>
+
+{icon}
+
 </div>
 
 
+<p className="
+mt-3
+text-sm
+text-slate-400
+"
+>
+
+{title}
+
+</p>
+
+
+<h3 className="
+mt-2
+text-xl
+font-bold
+"
+>
+
+{value}
+
+</h3>
+
+
 </div>
+
 
 );
 
@@ -501,88 +737,63 @@ name="CTF Rookie"
 
 
 
-function Stat({
-icon,
-title,
-value
-}:{
-icon:React.ReactNode;
-title:string;
-value:string;
-}){
-
-return (
-
-<div className="
-bg-black/40
-border
-border-gray-800
-rounded-xl
-p-5
-">
-
-<div className="text-cyan-400">
-{icon}
-</div>
-
-<p className="
-text-gray-400
-mt-3
-">
-{title}
-</p>
-
-<h3 className="
-text-xl
-font-bold
-mt-1
-">
-{value}
-</h3>
-
-
-</div>
-
-)
-
-}
-
-
-
 
 
 function Badge({
+
 icon,
 name
+
 }:{
+
 icon:React.ReactNode;
+
 name:string;
+
 }){
 
 
 return (
 
 <div className="
-bg-white/5
-border
-border-gray-800
-rounded-xl
-p-5
 flex
 items-center
 gap-3
-hover:scale-105
+rounded-2xl
+border
+border-white/10
+bg-white/5
+p-5
 transition
-">
+hover:-translate-y-1
+hover:border-cyan-400/40
+"
+>
 
-<div className="text-yellow-400">
+
+<div className="
+text-yellow-400
+"
+>
+
 {icon}
+
 </div>
+
+
+<span className="
+font-bold
+"
+>
 
 {name}
 
+</span>
+
+
 </div>
 
-)
+);
+
 
 }

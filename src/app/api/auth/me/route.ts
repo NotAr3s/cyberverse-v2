@@ -9,18 +9,36 @@ const secret =
   );
 
 
+
 export async function GET(req: Request) {
+
 
   try {
 
+
     const cookie =
-      req.headers
-      .get("cookie");
+      req.headers.get("cookie");
+
+
+
+    if(!cookie){
+
+      return NextResponse.json(
+        {
+          message:"Not authenticated"
+        },
+        {
+          status:401
+        }
+      );
+
+    }
+
 
 
     const token =
       cookie
-      ?.split("; ")
+      .split("; ")
       .find(
         item => item.startsWith("token=")
       )
@@ -32,7 +50,7 @@ export async function GET(req: Request) {
 
       return NextResponse.json(
         {
-          user:null
+          message:"Token missing"
         },
         {
           status:401
@@ -58,34 +76,68 @@ export async function GET(req: Request) {
           id:String(payload.id)
         },
 
-        select:{
-          id:true,
-          name:true,
-          email:true
+        include:{
+
+          completedLabs:true,
+
+          completedChallenges:true
+
         }
 
       });
 
 
 
+    if(!user){
+
+      return NextResponse.json(
+        {
+          message:"User not found"
+        },
+        {
+          status:404
+        }
+      );
+
+    }
+
+
+
+
     return NextResponse.json({
-      user
+
+      id:user.id,
+
+      username:user.username,
+
+      email:user.email,
+
+      xp:user.xp,
+
+      completedLabs:user.completedLabs,
+
+      completedChallenges:user.completedChallenges
+
     });
 
 
-  }
 
+  }
   catch(error){
+
+    console.log(error);
+
 
     return NextResponse.json(
       {
-        user:null
+        message:"Server error"
       },
       {
-        status:401
+        status:500
       }
     );
 
   }
+
 
 }

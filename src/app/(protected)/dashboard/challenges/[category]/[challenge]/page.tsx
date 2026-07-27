@@ -1,31 +1,44 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
+import { motion } from "framer-motion";
+
+import {
+  Trophy,
+  Lightbulb,
+  Terminal,
+  ShieldCheck,
+  CircleCheck,
+  Target
+} from "lucide-react";
+
 
 import { challenges } from "@/data/challenges";
 import { useProgress } from "@/context/ProgressContext";
+
 
 
 export default function ChallengePage({
 
 params
 
-}: {
+}:{
 
-params: Promise<{
+params:Promise<{
 category:string;
 challenge:string;
 }>
 
-}) {
+}){
 
 
-const { challenge } = use(params);
+const {challenge}=use(params);
 
 
 
-const lab = challenges.find(
-(item)=> item.id === challenge
+const currentChallenge =
+challenges.find(
+(item)=>item.id===challenge
 );
 
 
@@ -36,13 +49,13 @@ completeChallenge
 
 
 
-const [answer,setAnswer] = useState("");
+const [answer,setAnswer]=useState("");
 
-const [message,setMessage] = useState("");
+const [message,setMessage]=useState("");
 
-const [showHint,setShowHint] = useState(false);
+const [showHint,setShowHint]=useState(false);
 
-const [completed,setCompleted] = useState(false);
+const [completed,setCompleted]=useState(false);
 
 
 
@@ -51,7 +64,8 @@ const [completed,setCompleted] = useState(false);
 useEffect(()=>{
 
 
-if(!lab) return;
+if(!currentChallenge)
+return;
 
 
 const saved =
@@ -63,12 +77,14 @@ localStorage.getItem(
 
 if(saved){
 
-const completedList =
+const list =
 JSON.parse(saved);
 
 
 if(
-completedList.includes(lab.title)
+list.includes(
+currentChallenge.title
+)
 ){
 
 setCompleted(true);
@@ -78,24 +94,29 @@ setCompleted(true);
 }
 
 
-},[lab]);
+},[currentChallenge]);
 
 
 
 
 
-if(!lab){
+
+
+if(!currentChallenge){
+
 
 return (
 
 <div className="
 min-h-screen
-bg-black
-text-white
 p-10
+text-white
 ">
 
-<h1 className="text-3xl font-bold">
+<h1 className="
+text-4xl
+font-bold
+">
 
 Challenge Not Found
 
@@ -105,11 +126,9 @@ Challenge Not Found
 
 );
 
+
 }
 
-
-
-const currentLab = lab;
 
 
 
@@ -119,18 +138,19 @@ function submit(){
 
 
 if(
+
 answer
 .trim()
 .toLowerCase()
 .includes(
-currentLab.answer.toLowerCase()
+currentChallenge.answer.toLowerCase()
 )
 
 ){
 
 
 setMessage(
-"✅ Challenge Completed!"
+"Challenge completed successfully"
 );
 
 
@@ -139,19 +159,22 @@ setCompleted(true);
 
 
 completeChallenge(
-currentLab.title,
-currentLab.xp
+
+currentChallenge.title,
+
+currentChallenge.xp
+
 );
 
 
-
 }
+
 
 else{
 
 
 setMessage(
-"❌ Incorrect Answer"
+"Incorrect answer. Try again."
 );
 
 
@@ -159,6 +182,8 @@ setMessage(
 
 
 }
+
+
 
 
 
@@ -168,71 +193,128 @@ return (
 
 <div className="
 min-h-screen
-bg-black
-text-white
-p-10
-">
+space-y-8
+"
+>
 
+
+
+
+
+{/* HEADER */}
+
+
+<motion.div
+
+initial={{
+opacity:0,
+y:20
+}}
+
+animate={{
+opacity:1,
+y:0
+}}
+
+>
+
+
+<div className="
+flex
+items-center
+gap-3
+"
+>
+
+<ShieldCheck
+className="text-cyan-400"
+size={32}
+/>
 
 
 <h1 className="
 text-4xl
-font-bold
-">
+font-black
+"
+>
 
-{currentLab.title}
+{currentChallenge.title}
 
 </h1>
 
 
+</div>
 
-
-
-<div className="
-mt-6
-max-w-2xl
-bg-white/5
-border
-border-gray-800
-rounded-2xl
-p-6
-">
 
 
 
 <p className="
-text-gray-400
-">
+mt-4
+text-slate-400
+max-w-3xl
+"
+>
 
-{currentLab.description}
+{currentChallenge.description}
 
 </p>
 
 
 
+</motion.div>
+
+
+
+
+
+
+
+
+{/* INFO CARDS */}
 
 
 <div className="
-mt-5
-">
-
-<h2 className="
-font-bold
-text-xl
-">
-
-Challenge
-
-</h2>
+grid
+md:grid-cols-3
+gap-5
+"
+>
 
 
-<p className="
-mt-2
-">
+<Card
 
-{currentLab.question}
+icon={<Target/>}
 
-</p>
+title="Difficulty"
+
+value={currentChallenge.difficulty}
+
+/>
+
+
+
+<Card
+
+icon={<Trophy/>}
+
+title="Reward"
+
+value={`${currentChallenge.xp} XP`}
+
+/>
+
+
+
+<Card
+
+icon={<Terminal/>}
+
+title="Category"
+
+value={currentChallenge.category}
+
+/>
+
 
 
 </div>
@@ -242,19 +324,135 @@ mt-2
 
 
 
-{
-currentLab.type === "choice" ? (
+
+
+
+{/* TERMINAL PANEL */}
+
+
+<motion.div
+
+initial={{
+opacity:0
+}}
+
+animate={{
+opacity:1
+}}
+
+className="
+rounded-2xl
+border
+border-white/10
+bg-black/40
+p-6
+font-mono
+"
+
+>
 
 
 <div className="
-mt-5
-space-y-3
-">
+flex
+items-center
+gap-2
+text-green-400
+"
+>
+
+<Terminal size={18}/>
+
+challenge_terminal
+
+</div>
+
+
+
+<p className="
+mt-4
+text-slate-400
+"
+>
+
+&gt; target_loaded<br/>
+
+&gt; vulnerability_analysis_ready<br/>
+
+&gt; waiting_for_solution...
+
+</p>
+
+
+</motion.div>
+
+
+
+
+
+
+
+
+
+{/* CHALLENGE AREA */}
+
+
+
+<div className="
+rounded-3xl
+border
+border-white/10
+bg-white/5
+p-8
+backdrop-blur-xl
+"
+>
+
+
+<h2 className="
+text-2xl
+font-bold
+"
+>
+
+Mission Objective
+
+</h2>
+
+
+
+
+<p className="
+mt-4
+text-slate-300
+"
+>
+
+{currentChallenge.question}
+
+</p>
+
+
+
+
 
 
 
 {
-currentLab.options?.map(option=>(
+
+currentChallenge.type==="choice"
+
+?
+
+<div className="
+mt-6
+space-y-3
+"
+>
+
+
+{
+
+currentChallenge.options?.map(option=>(
 
 
 <button
@@ -266,31 +464,39 @@ onClick={()=>setAnswer(option)}
 className={`
 
 w-full
-text-left
+rounded-xl
 border
-border-gray-700
-rounded-lg
-p-3
-hover:bg-white/10
+p-4
+text-left
+transition
 
 ${
+
 answer===option
+
 ?
-"bg-blue-600"
+
+"border-cyan-400 bg-cyan-400/10 text-cyan-300"
+
 :
-""
+
+"border-white/10 hover:bg-white/10"
+
 }
 
 `}
 
 >
 
+
 {option}
+
 
 </button>
 
 
 ))
+
 
 }
 
@@ -299,44 +505,48 @@ answer===option
 </div>
 
 
-)
 
 :
-
-(
-
 
 <input
 
 className="
-mt-5
+mt-6
 w-full
-bg-black
+rounded-xl
 border
-border-gray-700
-rounded-lg
-p-3
+border-white/10
+bg-black/40
+p-4
+outline-none
+focus:border-cyan-400
 "
 
-placeholder="Enter your answer"
+placeholder="Enter your solution..."
 
 value={answer}
 
-onChange={
-(e)=>setAnswer(e.target.value)
-}
+onChange={(e)=>setAnswer(e.target.value)}
 
 />
 
 
-)
-
 }
 
 
 
 
 
+
+
+
+<div className="
+mt-8
+flex
+gap-4
+flex-wrap
+"
+>
 
 
 <button
@@ -346,12 +556,14 @@ onClick={submit}
 disabled={completed}
 
 className="
-mt-6
+rounded-xl
+bg-gradient-to-r
+from-cyan-400
+to-violet-500
 px-6
 py-3
-rounded-lg
-bg-blue-600
 font-bold
+text-black
 disabled:opacity-50
 "
 
@@ -367,13 +579,12 @@ completed
 
 :
 
-"Submit Challenge"
+"Submit Solution"
 
 }
 
 
 </button>
-
 
 
 
@@ -381,24 +592,31 @@ completed
 
 <button
 
-onClick={
-()=>setShowHint(!showHint)
-}
+onClick={()=>setShowHint(!showHint)}
 
 className="
-ml-3
+flex
+items-center
+gap-2
+rounded-xl
+border
+border-white/10
 px-5
 py-3
-border
-border-gray-700
-rounded-lg
+hover:bg-white/10
 "
 
 >
 
-💡 Hint
+<Lightbulb size={18}/>
+
+Hint
 
 </button>
+
+
+
+</div>
 
 
 
@@ -410,14 +628,63 @@ rounded-lg
 
 showHint &&
 
-<p className="
-mt-5
-text-yellow-400
-">
+<div className="
+mt-6
+rounded-xl
+border
+border-yellow-400/20
+bg-yellow-400/10
+p-4
+text-yellow-300
+"
+>
 
-💡 {currentLab.hint}
+💡 {currentChallenge.hint}
 
-</p>
+</div>
+
+
+}
+
+
+
+
+
+{
+
+message &&
+
+<div className="
+mt-6
+flex
+items-center
+gap-2
+text-cyan-400
+"
+>
+
+<CircleCheck size={18}/>
+
+{message}
+
+</div>
+
+
+}
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+);
+
 
 }
 
@@ -427,56 +694,71 @@ text-yellow-400
 
 
 
-<p className="
-mt-5
-font-bold
-">
+function Card({
 
-{message}
+icon,
+title,
+value
+
+}:{
+
+icon:React.ReactNode;
+
+title:string;
+
+value:string;
+
+}){
+
+
+return (
+
+<div className="
+rounded-2xl
+border
+border-white/10
+bg-white/5
+p-5
+"
+>
+
+
+<div className="
+text-cyan-400
+"
+>
+
+{icon}
+
+</div>
+
+
+<p className="
+mt-3
+text-sm
+text-slate-400
+"
+>
+
+{title}
 
 </p>
 
 
+<h3 className="
+mt-1
+font-bold
+text-white
+"
+>
 
+{value}
 
-
-
-
-<div className="
-mt-5
-text-green-400
-">
-
-Reward:
-{currentLab.xp} XP
-
-</div>
-
-
-
-
-
-
-
-<div className="
-mt-2
-text-gray-400
-">
-
-Difficulty:
-{currentLab.difficulty}
-
-</div>
-
-
-
-
+</h3>
 
 
 </div>
 
-
-</div>
 
 );
 

@@ -1,39 +1,54 @@
 "use client";
 
 import { use } from "react";
-import { useTheme } from "@/context/ThemeContext";
-import { themes } from "@/context/themeStyles";
-import { useProgress } from "@/context/ProgressContext";
+import { useState } from "react";
+import { motion } from "framer-motion";
+
+import {
+  Shield,
+  Terminal,
+  Trophy,
+  ExternalLink,
+  CheckCircle,
+  Target
+} from "lucide-react";
+
+
 import { labs } from "@/data/labs";
+
+import { useProgress } from "@/context/ProgressContext";
+
+import PageContainer from "@/components/ui/PageContainer";
+import CyberCard from "@/components/ui/CyberCard";
+
 
 
 export default function LabPage({
 
 params
 
-}: {
+}:{
 
-params: Promise<{
-  lab:string
+params:Promise<{
+lab:string
 }>
 
-}) {
+}){
 
 
 const {lab:labId}=use(params);
 
 
 
-const {theme}=useTheme();
-
-const style = themes[theme as keyof typeof themes];
-
-
-
 const {
-  completeLab
+completeLab
 }=useProgress();
 
+
+
+const [completed,setCompleted]=useState(false);
+
+const [message,setMessage]=useState("");
 
 
 
@@ -49,25 +64,23 @@ labs.find(
 
 if(!lab){
 
-return (
+return(
 
-<div className="
-min-h-screen
-bg-black
-text-white
-p-10
-">
+<PageContainer>
 
-<h1 className="
-text-3xl
-font-bold
-">
+<CyberCard className="p-10">
 
+<h1 className="text-3xl font-black">
 Lab Not Found
-
 </h1>
 
-</div>
+<p className="mt-3 text-slate-400">
+The requested cybersecurity mission does not exist.
+</p>
+
+</CyberCard>
+
+</PageContainer>
 
 );
 
@@ -77,48 +90,157 @@ Lab Not Found
 
 
 
-return (
+
+async function finishLab(){
+
+
+try{
+
+
+const res =
+await fetch(
+"/api/progress/lab",
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+labId:lab.id,
+
+title:lab.title,
+
+xp:lab.xp
+
+})
+
+}
+
+);
+
+
+
+const data =
+await res.json();
+
+
+
+if(!res.ok){
+
+setMessage(
+data.message || "Failed"
+);
+
+return;
+
+}
+
+
+
+
+completeLab(
+lab.title,
+lab.xp
+);
+
+
+
+setCompleted(true);
+
+
+setMessage(
+"✅ Lab completed and XP added"
+);
+
+
+
+}
+
+catch(error){
+
+
+setMessage(
+"Server error"
+);
+
+
+}
+
+
+}
+
+
+
+
+
+
+return(
+
+<PageContainer>
+
+
+
+<motion.div
+
+initial={{
+opacity:0,
+y:20
+}}
+
+animate={{
+opacity:1,
+y:0
+}}
+
+className="mb-10"
+
+>
+
 
 <div className="
-min-h-screen
-bg-black
-text-white
-p-10
+flex
+items-center
+gap-3
 ">
 
 
+<Shield
+size={36}
+className="text-cyan-400"
+/>
 
 
-
-<h1
-
-className={`
-
-text-4xl
-font-bold
-${style.text}
-
-`}
-
->
+<h1 className="
+text-5xl
+font-black
+">
 
 {lab.title}
 
 </h1>
 
 
+</div>
+
 
 
 
 <p className="
-text-gray-400
-mt-3
+mt-4
 max-w-3xl
+text-slate-400
 ">
 
 {lab.description}
 
 </p>
+
+
+</motion.div>
 
 
 
@@ -128,116 +250,97 @@ max-w-3xl
 
 <div className="
 grid
+gap-6
 md:grid-cols-3
-gap-5
-mt-8
 ">
 
 
+<InfoCard
 
-<div className="
-bg-white/5
-border
-border-gray-800
-rounded-xl
-p-5
-">
+icon={<Target/>}
 
-<p className="
-text-gray-400
-">
+title="Difficulty"
 
-Difficulty
+value={lab.difficulty}
 
-</p>
+/>
+
+
+
+<InfoCard
+
+icon={<Trophy/>}
+
+title="Reward"
+
+value={`${lab.xp} XP`}
+
+/>
+
+
+
+<InfoCard
+
+icon={<Terminal/>}
+
+title="Platform"
+
+value={lab.platform}
+
+/>
+
+
+</div>
+
+
+
+
+
+
+
+
+<CyberCard
+
+className="
+mt-10
+p-8
+"
+
+>
 
 
 <h2 className="
-text-xl
-font-bold
+flex
+items-center
+gap-2
+text-3xl
+font-black
 ">
 
-{lab.difficulty}
+
+<Terminal
+className="text-cyan-400"
+/>
+
+
+Mission Brief
+
 
 </h2>
 
-</div>
 
 
 
-
-
-
-
-<div className="
-bg-white/5
-border
-border-gray-800
-rounded-xl
-p-5
-">
 
 <p className="
-text-gray-400
+mt-4
+text-slate-400
 ">
 
-Reward
+Complete this cybersecurity exercise and improve your
+practical security skills.
 
 </p>
-
-
-<h2 className={`
-
-text-xl
-font-bold
-${style.text}
-
-`}>
-
-{lab.xp} XP
-
-</h2>
-
-</div>
-
-
-
-
-
-
-
-<div className="
-bg-white/5
-border
-border-gray-800
-rounded-xl
-p-5
-">
-
-<p className="
-text-gray-400
-">
-
-Platform
-
-</p>
-
-
-<h2 className="
-text-xl
-font-bold
-">
-
-{lab.platform}
-
-</h2>
-
-</div>
-
-
-
-</div>
-
 
 
 
@@ -248,36 +351,117 @@ font-bold
 
 <div className="
 mt-8
-bg-white/5
+rounded-xl
 border
-border-gray-800
-rounded-2xl
+border-white/10
+bg-black/50
+p-5
+font-mono
+text-sm
+">
+
+
+<p className="text-green-400">
+
+$ cyberverse init {lab.id}
+
+</p>
+
+
+
+<p className="mt-3 text-slate-400">
+
+&gt; loading environment...
+
+<br/>
+
+&gt; vulnerability modules loaded
+
+<br/>
+
+&gt; mission ready
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div className="
+mt-8
+rounded-xl
+bg-white/5
 p-6
 ">
 
 
-
-<h2 className="
-text-2xl
+<h3 className="
+text-xl
 font-bold
 ">
 
-About This Lab
+Objectives
 
-</h2>
-
-
+</h3>
 
 
-<p className="
-text-gray-400
-mt-3
+
+<ul className="
+mt-4
+space-y-3
+text-slate-400
 ">
 
-Complete this cybersecurity exercise on the official platform.
-After finishing, mark it completed to receive XP.
 
-</p>
+<li className="flex gap-2">
+
+<CheckCircle
+size={18}
+className="text-cyan-400"
+/>
+
+Understand vulnerability
+
+</li>
+
+
+
+<li className="flex gap-2">
+
+<CheckCircle
+size={18}
+className="text-cyan-400"
+/>
+
+Complete practical exercise
+
+</li>
+
+
+
+<li className="flex gap-2">
+
+<CheckCircle
+size={18}
+className="text-cyan-400"
+/>
+
+Submit completion
+
+</li>
+
+
+</ul>
+
+
+</div>
+
 
 
 
@@ -286,9 +470,10 @@ After finishing, mark it completed to receive XP.
 
 
 <div className="
+mt-8
 flex
+flex-wrap
 gap-4
-mt-6
 ">
 
 
@@ -299,19 +484,27 @@ href={lab.url}
 
 target="_blank"
 
-className={`
-
+className="
+flex
+items-center
+gap-2
+rounded-xl
+bg-gradient-to-r
+from-cyan-400
+to-violet-500
 px-6
 py-3
-rounded-lg
 font-bold
-${style.button}
-
-`}
+text-black
+hover:scale-105
+transition
+"
 
 >
 
 Launch Lab
+
+<ExternalLink size={18}/>
 
 </a>
 
@@ -320,30 +513,43 @@ Launch Lab
 
 
 
+
 <button
 
-onClick={()=>{
+disabled={completed}
 
-completeLab(
-lab.title,
-lab.xp
-);
-
-}}
+onClick={finishLab}
 
 className="
+flex
+items-center
+gap-2
+rounded-xl
+border
+border-white/10
+bg-white/5
 px-6
 py-3
-rounded-lg
 font-bold
-bg-white/10
-border
-border-gray-700
+hover:bg-white/10
+transition
+disabled:opacity-50
 "
 
 >
 
-Mark Completed
+
+<CheckCircle size={18}/>
+
+
+{
+completed
+?
+"Completed ✓"
+:
+"Mark Completed"
+}
+
 
 </button>
 
@@ -355,14 +561,95 @@ Mark Completed
 
 
 
+{
+message &&
+
+<p className="
+mt-5
+font-bold
+text-cyan-400
+">
+
+{message}
+
+</p>
+
+}
+
+
+
+
+</CyberCard>
+
+
+
+
+
+
+</PageContainer>
+
+
+);
+
+}
+
+
+
+
+
+
+
+
+function InfoCard({
+
+icon,
+title,
+value
+
+}:{
+
+icon:React.ReactNode;
+title:string;
+value:string;
+
+}){
+
+
+return(
+
+<CyberCard className="p-6">
+
+
+<div className="text-cyan-400">
+
+{icon}
+
 </div>
 
 
+<p className="
+mt-4
+text-sm
+text-slate-400
+">
+
+{title}
+
+</p>
 
 
+<h2 className="
+mt-2
+text-xl
+font-bold
+">
+
+{value}
+
+</h2>
 
 
-</div>
+</CyberCard>
 
 );
 

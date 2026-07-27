@@ -20,7 +20,6 @@ export default function Register() {
 
   async function submit() {
 
-
     try {
 
       setLoading(true);
@@ -37,7 +36,7 @@ export default function Register() {
 
         body: JSON.stringify({
 
-          name: username,
+          username,
           email,
           password
 
@@ -53,7 +52,9 @@ export default function Register() {
 
       if(!res.ok){
 
-        setMessage(data.message || "Registration failed");
+        setMessage(
+          data.message || "Registration failed"
+        );
 
         return;
 
@@ -61,7 +62,10 @@ export default function Register() {
 
 
 
-      setMessage("Account created successfully");
+      setMessage(
+        "Account created successfully"
+      );
+
 
 
       setTimeout(()=>{
@@ -72,20 +76,18 @@ export default function Register() {
 
 
 
-    }
+    } catch(error){
 
-    catch(error){
+      setMessage(
+        "Something went wrong"
+      );
 
-      setMessage("Something went wrong");
 
-    }
-
-    finally{
+    } finally {
 
       setLoading(false);
 
     }
-
 
   }
 
@@ -138,8 +140,8 @@ export default function Register() {
 
           value={username}
 
-          onChange={
-            e=>setUsername(e.target.value)
+          onChange={(e)=>
+            setUsername(e.target.value)
           }
 
         />
@@ -162,8 +164,8 @@ export default function Register() {
 
           value={email}
 
-          onChange={
-            e=>setEmail(e.target.value)
+          onChange={(e)=>
+            setEmail(e.target.value)
           }
 
         />
@@ -188,8 +190,8 @@ export default function Register() {
 
           value={password}
 
-          onChange={
-            e=>setPassword(e.target.value)
+          onChange={(e)=>
+            setPassword(e.target.value)
           }
 
         />
@@ -223,6 +225,7 @@ export default function Register() {
           }
 
         </button>
+
 
 
 

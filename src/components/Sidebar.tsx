@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   Home,
@@ -9,163 +10,468 @@ import {
   Trophy,
   Settings,
   User,
+  Flag,
+  LogOut,
+  Shield,
+  Terminal,
+  Crown
 } from "lucide-react";
 
-
-export default function Sidebar() {
-  return (
-    <aside className="
-    w-64
-    min-w-64
-    h-screen
-    sticky
-    top-0
-    border-r
-    border-gray-800
-    bg-black/40
-    p-5
-    ">
+import { useAuth } from "@/context/AuthContext";
 
 
-      <Link
-        href="/"
-        className="
-        text-2xl
-        font-bold
-        mb-8
-        text-cyan-400
-        block
-        "
-      >
-        CyberVerse
-      </Link>
+const menu = [
 
+{
+name:"Home",
+href:"/",
+icon:Home
+},
 
+{
+name:"Dashboard",
+href:"/dashboard",
+icon:LayoutDashboard
+},
 
-      <nav className="space-y-3">
+{
+name:"Labs",
+href:"/dashboard/labs",
+icon:FlaskConical
+},
 
+{
+name:"Challenges",
+href:"/dashboard/challenges",
+icon:Trophy
+},
 
-        <Link
-          href="/"
-          className="
-          flex
-          items-center
-          gap-3
-          p-3
-          rounded-lg
-          hover:bg-white/10
-          "
-        >
-          <Home size={20}/>
-          Home
-        </Link>
+{
+name:"CTF Arena",
+href:"/dashboard/ctf",
+icon:Flag
+},
 
+{
+name:"Leaderboard",
+href:"/leaderboard",
+icon:Crown
+},
 
+{
+name:"Profile",
+href:"/profile",
+icon:User
+},
 
-        <Link
-          href="/dashboard"
-          className="
-          flex
-          items-center
-          gap-3
-          p-3
-          rounded-lg
-          hover:bg-white/10
-          "
-        >
-          <LayoutDashboard size={20}/>
-          Dashboard
-        </Link>
+{
+name:"Settings",
+href:"/settings",
+icon:Settings
+}
+
+];
 
 
 
-        <Link
-          href="/dashboard/labs"
-          className="
-          flex
-          items-center
-          gap-3
-          p-3
-          rounded-lg
-          hover:bg-white/10
-          "
-        >
-          <FlaskConical size={20}/>
-          Labs
-        </Link>
+
+export default function Sidebar(){
+
+
+const pathname = usePathname();
+
+const {
+user,
+logout
+}=useAuth();
 
 
 
-        <Link
-          href="/dashboard/challenges"
-          className="
-          flex
-          items-center
-          gap-3
-          p-3
-          rounded-lg
-          hover:bg-white/10
-          "
-        >
-          <Trophy size={20}/>
-          Challenges
-        </Link>
+
+return (
+
+<aside
+
+className="
+hidden
+md:flex
+sticky
+top-0
+h-screen
+w-72
+flex-col
+border-r
+border-white/10
+bg-[#050816]/80
+backdrop-blur-2xl
+p-6
+"
+
+>
+
+
+{/* LOGO */}
+
+<Link
+
+href="/"
+
+className="
+flex
+items-center
+gap-3
+mb-10
+"
+
+>
+
+<div
+className="
+rounded-xl
+bg-cyan-400/10
+p-3
+shadow-lg
+shadow-cyan-400/10
+"
+>
+
+<Shield className="text-cyan-400"/>
+
+</div>
+
+
+<div>
+
+<h1 className="
+text-2xl
+font-black
+text-white
+">
+
+Cyber<span className="text-cyan-400">
+Verse
+</span>
+
+</h1>
+
+
+<p className="
+text-xs
+text-slate-500
+">
+
+Security Platform
+
+</p>
+
+
+</div>
+
+
+</Link>
 
 
 
-        <Link
-          href="/dashboard/ctf"
-          className="
-          flex
-          items-center
-          gap-3
-          p-3
-          rounded-lg
-          hover:bg-white/10
-          "
-        >
-          <Trophy size={20}/>
-          CTF Arena
-        </Link>
+
+
+{/* USER CARD */}
+
+<div
+
+className="
+rounded-2xl
+border
+border-white/10
+bg-white/5
+p-4
+mb-8
+"
+
+>
+
+<div className="
+flex
+items-center
+gap-3
+">
+
+<div
+
+className="
+h-11
+w-11
+rounded-full
+bg-gradient-to-r
+from-cyan-400
+to-violet-500
+flex
+items-center
+justify-center
+font-black
+text-black
+"
+
+>
+
+{
+user?.username?.charAt(0) || "C"
+}
+
+</div>
 
 
 
-        <Link
-          href="/profile"
-          className="
-          flex
-          items-center
-          gap-3
-          p-3
-          rounded-lg
-          hover:bg-white/10
-          "
-        >
-          <User size={20}/>
-          Profile
-        </Link>
+<div>
+
+<p className="
+font-bold
+text-white
+">
+
+{
+user?.username || "Cyber Recruit"
+}
+
+</p>
+
+
+<p className="
+text-xs
+text-slate-400
+">
+
+Security Level: Beginner
+
+</p>
+
+
+</div>
+
+
+</div>
 
 
 
-        <Link
-          href="/settings"
-          className="
-          flex
-          items-center
-          gap-3
-          p-3
-          rounded-lg
-          hover:bg-white/10
-          "
-        >
-          <Settings size={20}/>
-          Settings
-        </Link>
+<div className="
+mt-5
+h-2
+rounded-full
+bg-black/40
+overflow-hidden
+">
+
+<div
+
+className="
+h-full
+w-[35%]
+rounded-full
+bg-gradient-to-r
+from-cyan-400
+to-violet-500
+"
+
+/>
+
+</div>
 
 
-      </nav>
+<p className="
+mt-2
+text-xs
+text-slate-400
+">
+
+XP Progress
+
+</p>
 
 
-    </aside>
-  );
+</div>
+
+
+
+
+
+
+{/* NAVIGATION */}
+
+<nav className="
+flex-1
+space-y-2
+">
+
+
+{
+menu.map((item)=>{
+
+const Icon = item.icon;
+
+
+const active =
+pathname === item.href ||
+pathname.startsWith(item.href + "/");
+
+
+
+return (
+
+<Link
+
+key={item.name}
+
+href={item.href}
+
+className={`
+
+group
+
+flex
+items-center
+gap-3
+rounded-xl
+px-4
+py-3
+transition-all
+duration-300
+
+${
+active
+
+?
+
+"bg-cyan-400/10 text-cyan-400 border border-cyan-400/20 shadow-lg shadow-cyan-400/5"
+
+:
+
+"text-slate-400 hover:bg-white/5 hover:text-white"
+
+}
+
+`}
+
+>
+
+
+<Icon
+
+size={20}
+
+className="
+transition-transform
+duration-300
+group-hover:scale-110
+"
+
+/>
+
+
+<span className="
+font-medium
+">
+
+{item.name}
+
+</span>
+
+
+</Link>
+
+);
+
+})
+
+}
+
+
+</nav>
+
+
+
+
+
+
+
+{/* STATUS */}
+
+<div
+
+className="
+rounded-xl
+border
+border-white/10
+bg-black/30
+p-4
+mb-4
+"
+
+>
+
+
+<div className="
+flex
+items-center
+gap-2
+text-green-400
+font-mono
+text-sm
+">
+
+<Terminal size={16}/>
+
+System Online
+
+</div>
+
+
+<p className="
+mt-2
+text-xs
+text-slate-500
+">
+
+Threat monitoring active
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+{/* LOGOUT */}
+
+<button
+
+onClick={logout}
+
+className="
+flex
+items-center
+gap-3
+rounded-xl
+px-4
+py-3
+text-red-400
+transition
+hover:bg-red-400/10
+"
+
+>
+
+<LogOut size={20}/>
+
+Logout
+
+</button>
+
+
+
+</aside>
+
+);
+
 }

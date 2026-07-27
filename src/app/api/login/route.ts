@@ -14,6 +14,7 @@ export async function POST(req: Request) {
 
   try {
 
+
     const {
       email,
       password
@@ -103,18 +104,24 @@ export async function POST(req: Request) {
 
 
 
+
     const response =
       NextResponse.json({
 
         message:"Login successful",
 
         user:{
+
           id:user.id,
-          name:user.name,
+
+          username:user.username,
+
           email:user.email
+
         }
 
       });
+
 
 
 
@@ -126,10 +133,10 @@ export async function POST(req: Request) {
         httpOnly:true,
 
         secure:
-          process.env.NODE_ENV === "production",
+        process.env.NODE_ENV === "production",
 
         maxAge:
-          60 * 60 * 24 * 7,
+        60 * 60 * 24 * 7,
 
         path:"/",
 
@@ -144,9 +151,12 @@ export async function POST(req: Request) {
 
   }
 
+
   catch(error){
 
+
     console.log(error);
+
 
     return NextResponse.json(
       {
@@ -156,6 +166,7 @@ export async function POST(req: Request) {
         status:500
       }
     );
+
 
   }
 

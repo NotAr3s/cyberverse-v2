@@ -3,24 +3,62 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
-
 datasource db {
   provider = "postgresql"
 }
 
-
 model User {
-
   id String @id @default(cuid())
 
-  name String
+  username String
 
   email String @unique
 
   password String
 
+  xp Int @default(0)
+
+  completedLabs LabProgress[]
+
+  completedChallenges ChallengeProgress[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+}
 
+model LabProgress {
+  id String @id @default(cuid())
+
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  labId String
+
+  title String
+
+  xp Int
+
+  completedAt DateTime @default(now())
+
+  @@unique([userId, labId])
+}
+
+model ChallengeProgress {
+  id String @id @default(cuid())
+
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  challengeId String
+
+  title String
+
+  xp Int
+
+  completedAt DateTime @default(now())
+
+  @@unique([userId, challengeId])
 }
